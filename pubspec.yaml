@@ -36,6 +36,8 @@ dependencies:
   path: ^1.9.0
   lsp_client:
     path: packages/lsp_client
+  parser_client:
+    path: packages/parser_client
 
 dev_dependencies:
   flutter_test:
