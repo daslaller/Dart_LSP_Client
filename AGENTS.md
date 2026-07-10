@@ -11,9 +11,10 @@ hover, definition, references, rename, formatting, and symbols.
 
 ### Toolchain (already installed in the VM snapshot)
 
-- Dart `3.12.2` (shipped with Flutter `3.44.5` at `~/flutter/bin`, on `PATH` via
-  `~/.bashrc`). The package only needs `dart >=3.0.0` — no Flutter, no other
-  system deps.
+- Dart `3.12.2` standalone SDK at `~/dart-sdk`, symlinked into
+ `/usr/local/bin/dart` (so it is on `PATH` even in non-interactive shells; also
+ exported via `~/.bashrc`). The package only needs `dart >=3.0.0` — no Flutter,
+ no other system deps.
 
 ### Commands
 
