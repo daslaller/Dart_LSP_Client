@@ -1,7 +1,7 @@
 name: lsp_client
-description: Pure Dart LSP client — JSON-RPC 2.0 over stdio, zero Flutter dependency.
+description: Pure Dart LSP client — JSON-RPC 2.0 over stdio with Content-Length framing. Zero Flutter dependency.
 version: 0.1.0
-publish_to: none
+repository: https://github.com/daslaller/dart_lsp_client
 
 environment:
   sdk: ^3.0.0

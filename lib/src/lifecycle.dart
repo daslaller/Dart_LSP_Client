@@ -6,21 +6,25 @@ import 'definition.dart';
 import 'diagnostics.dart';
 import 'formatting.dart';
 import 'hover.dart';
-import '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/references.dart';
-import '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/rename.dart';
-import '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/symbols.dart';
-import '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/text_sync.dart';
-import '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/transport.dart';
+import 'references.dart';
+import 'rename.dart';
+import 'symbols.dart';
+import 'text_sync.dart';
+import 'transport.dart';
+import 'code_actions.dart';
+import 'signature_help.dart';
 
 export 'completion.dart';
 export 'definition.dart';
 export 'diagnostics.dart';
 export 'formatting.dart';
 export 'hover.dart';
-export '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/references.dart';
-export '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/rename.dart';
-export '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/symbols.dart';
-export '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/text_sync.dart';
+export 'references.dart';
+export 'rename.dart';
+export 'symbols.dart';
+export 'text_sync.dart';
+export 'code_actions.dart';
+export 'signature_help.dart';
 
 /// Full LSP client: lifecycle, text sync, diagnostics, completion, hover, definition.
 ///
@@ -260,6 +264,46 @@ class LspClient {
     return LspWorkspaceSymbol.parseResult(response?['result']);
   }
 
+  // ── Code Actions ──────────────────────────────────────────────────────────
+
+  Future<List<LspCodeAction>> getCodeActions({
+    required Uri uri,
+    required LspRange range,
+    List<LspDiagnostic>? diagnostics,
+  }) async {
+    final response = await _request('textDocument/codeAction', {
+      'textDocument': {'uri': uri.toString()},
+      'range': {
+        'start': range.start.toJson(),
+        'end': range.end.toJson(),
+      },
+      'context': {
+        'diagnostics': diagnostics?.map((d) => {
+          'range': {'start': d.range.start.toJson(), 'end': d.range.end.toJson()},
+          'message': d.message,
+          'severity': d.severity.index + 1,
+        }).toList() ?? [],
+      },
+    });
+    return LspCodeAction.parseResult(response?['result']);
+  }
+
+  // ── Signature Help ────────────────────────────────────────────────────────
+
+  Future<LspSignatureHelp?> getSignatureHelp({
+    required Uri uri,
+    required int line,
+    required int character,
+  }) async {
+    final response = await _request('textDocument/signatureHelp', {
+      'textDocument': {'uri': uri.toString()},
+      'position': {'line': line, 'character': character},
+    });
+    final result = response?['result'];
+    if (result == null) return null;
+    return LspSignatureHelp.fromJson(result as Map<String, dynamic>);
+  }
+
   // ── Shutdown ──────────────────────────────────────────────────────────────
 
   Future<void> shutdown() async {
@@ -303,6 +347,8 @@ class LspClient {
           'rename': {'prepareSupport': true},
           'formatting': {},
           'publishDiagnostics': {},
+          'codeAction': {'codeActionLiteralSupport': {'codeActionKind': {'valueSet': []}}},
+          'signatureHelp': {'signatureInformation': {'documentationFormat': ['plaintext', 'markdown']}},
         },
         'workspace': {
           'symbol': {'dynamicRegistration': false},

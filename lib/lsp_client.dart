@@ -13,3 +13,5 @@ export 'src/references.dart';
 export 'src/rename.dart';
 export 'src/symbols.dart';
 export 'src/text_sync.dart';
+export 'src/code_actions.dart';
+export 'src/signature_help.dart';
