@@ -6,21 +6,21 @@ import 'definition.dart';
 import 'diagnostics.dart';
 import 'formatting.dart';
 import 'hover.dart';
-import 'references.dart';
-import 'rename.dart';
-import 'symbols.dart';
-import 'text_sync.dart';
-import 'transport.dart';
+import '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/references.dart';
+import '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/rename.dart';
+import '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/symbols.dart';
+import '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/text_sync.dart';
+import '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/transport.dart';
 
 export 'completion.dart';
 export 'definition.dart';
 export 'diagnostics.dart';
 export 'formatting.dart';
 export 'hover.dart';
-export 'references.dart';
-export 'rename.dart';
-export 'symbols.dart';
-export 'text_sync.dart';
+export '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/references.dart';
+export '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/rename.dart';
+export '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/symbols.dart';
+export '../../../krom/docs/dart_lsp_client-bootstrap/lib/src/text_sync.dart';
 
 /// Full LSP client: lifecycle, text sync, diagnostics, completion, hover, definition.
 ///
