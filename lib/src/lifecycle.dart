@@ -268,21 +268,41 @@ class LspClient {
 
   Future<List<LspCodeAction>> getCodeActions({
     required Uri uri,
-    required LspRange range,
+    LspRange? range,
+    int? startLine,
+    int? startCharacter,
+    int? endLine,
+    int? endCharacter,
     List<LspDiagnostic>? diagnostics,
   }) async {
+    final effectiveRange = range ??
+        LspRange(
+          start: LspPosition(
+            line: startLine!,
+            character: startCharacter!,
+          ),
+          end: LspPosition(
+            line: endLine!,
+            character: endCharacter!,
+          ),
+        );
     final response = await _request('textDocument/codeAction', {
       'textDocument': {'uri': uri.toString()},
       'range': {
-        'start': range.start.toJson(),
-        'end': range.end.toJson(),
+        'start': effectiveRange.start.toJson(),
+        'end': effectiveRange.end.toJson(),
       },
       'context': {
         'diagnostics': diagnostics?.map((d) => {
-          'range': {'start': d.range.start.toJson(), 'end': d.range.end.toJson()},
+          'range': {
+            'start': d.range.start.toJson(),
+            'end': d.range.end.toJson(),
+          },
           'message': d.message,
           'severity': d.severity.index + 1,
-        }).toList() ?? [],
+        }).toList() ??
+            [],
+        'only': ['quickfix', 'refactor'],
       },
     });
     return LspCodeAction.parseResult(response?['result']);

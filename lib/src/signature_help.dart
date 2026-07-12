@@ -24,13 +24,13 @@ class LspSignatureInformation {
   LspSignatureInformation({
     required this.label,
     this.documentation,
-    this.parameters,
+    this.parameters = const [],
     this.activeParameter,
   });
 
   final String label;
   final String? documentation;
-  final List<LspParameterInformation>? parameters;
+  final List<LspParameterInformation> parameters;
   final int? activeParameter;
 
   factory LspSignatureInformation.fromJson(Map<String, dynamic> json) {
@@ -40,8 +40,10 @@ class LspSignatureInformation {
           ? json['documentation']['value'] as String?
           : json['documentation'] as String?,
       parameters: (json['parameters'] as List?)
-          ?.map((p) => LspParameterInformation.fromJson(p as Map<String, dynamic>))
-          .toList(),
+              ?.map((p) =>
+                  LspParameterInformation.fromJson(p as Map<String, dynamic>))
+              .toList() ??
+          const [],
       activeParameter: json['activeParameter'] as int?,
     );
   }
@@ -55,6 +57,8 @@ class LspParameterInformation {
 
   final dynamic label; // String or [int, int]
   final String? documentation;
+
+  String get displayLabel => label is String ? label as String : '';
 
   factory LspParameterInformation.fromJson(Map<String, dynamic> json) {
     return LspParameterInformation(

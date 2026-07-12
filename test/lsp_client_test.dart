@@ -142,6 +142,37 @@ void main() {
     });
   });
 
+  group('LspCodeAction', () {
+    test('parses quickfix with workspace edit', () {
+      final action = LspCodeAction.fromJson({
+        'title': 'Import library',
+        'kind': 'quickfix',
+        'edit': {
+          'changes': {
+            'file:///main.dart': [
+              {
+                'range': {
+                  'start': {'line': 0, 'character': 0},
+                  'end': {'line': 0, 'character': 0},
+                },
+                'newText': "import 'dart:async';\n",
+              },
+            ],
+          },
+        },
+      });
+      expect(action.title, 'Import library');
+      expect(action.kind, 'quickfix');
+      expect(action.edit, isNotNull);
+      expect(action.edit!.changes.length, 1);
+    });
+
+    test('parseResult ignores non-list responses', () {
+      expect(LspCodeAction.parseResult(null), isEmpty);
+      expect(LspCodeAction.parseResult({'items': []}), isEmpty);
+    });
+  });
+
   group('LspClient integration', () {
     test('start fails gracefully when server is unavailable', () async {
       expect(
